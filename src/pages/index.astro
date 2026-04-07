@@ -1,0 +1,62 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Logo from "@/components/assets/Logo.astro";
+import Text from "@/components/fundations/elements/Text.astro";
+import Wrapper from "@/components/fundations/containers/Wrapper.astro";
+import Button from "@/components/bearnie/button/Button.astro";
+import { siteConfig } from "@/config/site";
+import Github from "@lucide/astro/icons/github";
+import LayoutGrid from "@lucide/astro/icons/layout-grid";
+---
+
+<BaseLayout
+        structuredData={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: siteConfig.name,
+            description:
+                "A set of accessible components that you can customize, extend, and build on. Start here then make it your own. Open Source. Open Code. Use this to build your own component library.",
+            url: siteConfig.url,
+            publisher: {
+                "@type": "Organization",
+                name: siteConfig.name,
+                url: siteConfig.url,
+                logo: {
+                    "@type": "ImageObject",
+                    url: siteConfig.ogImage,
+                },
+            },
+            sameAs: [siteConfig.author.twitter],
+        }}>
+
+    <section>
+        <Wrapper
+                class="standard"
+                class="py-12 lg:h-[calc(100vh-11.5rem)] flex flex-col justify-center"
+        >
+            <!-- Hero Section -->
+            <div class="max-w-sm text-center mx-auto text-balance">
+                <Logo class="size-12 lg:size-20 mx-auto" />
+                <Text
+                        tag="h1"
+                        variant="textXL"
+                        class="font-medium tracking-tight mt-12"
+                >
+                    Simplify · Realize
+                </Text>
+                <Text tag="p" variant="textBase" class="text-muted-foreground mt-4">
+                    Make the World Simpler. Move Ideas Forward.
+                </Text>
+
+                <div class="flex items-center gap-2.5 mt-12 justify-center">
+                    <Button href="https://github.com/hocgin/" size="default"><Github/> GitHub</Button>
+                    <Button href="https://logspot.hocgin.top/" variant="outline" size="default"
+                    ><LayoutGrid/> Portfolio</Button>
+                </div>
+                <code class="mt-8 block text-xs text-muted-foreground font-mono">
+                    "hello world"
+                </code>
+            </div>
+        </Wrapper>
+    </section>
+</BaseLayout>
