@@ -1,0 +1,63 @@
+# 构建 Astro 静态站点并部署到 GitHub Pages
+# 触发后将静态产物上传为 artifact，再由 deploy 任务发布到 gh-pages
+name: Deploy to GitHub Pages
+
+on:
+  # 推送到 main 分支时自动触发
+  push:
+    branches: [main]
+  # 允许在 Actions 页面手动触发
+  workflow_dispatch:
+
+# GitHub Pages 部署所需的默认权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间仅允许一个部署流水线运行，避免并发发布冲突
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建静态文件
+        run: pnpm run build
+
+      - name: 上传 Pages 产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
